@@ -1,5 +1,14 @@
+html,body {
+    height: 100%;
+}
 body{
 
-background:#f8f9fa;
+    background:#f8f9fa;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 
+}
+.container {
+    flex : 1;
 }
