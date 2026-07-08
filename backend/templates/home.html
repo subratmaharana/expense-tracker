@@ -1,34 +1,82 @@
 {% extends 'base.html' %}
 
 {% block title %}
-
 Home
-
 {% endblock %}
-
 
 {% block content %}
 
-<div class="text-center">
+<div class="text-center py-5">
 
-<h1>
+    <h1 class="display-4 fw-bold">
+        Expense Tracker
+    </h1>
 
-Welcome to Expense Tracker
+    <p class="lead mt-3">
+        Track your income and expenses with ease.
+    </p>
 
-</h1>
+    <a href="#" class="btn btn-primary btn-lg mt-3">
+        Get Started
+    </a>
 
-<p>
+</div>
 
-Manage your income and expenses efficiently.
+<div class="row mt-5">
 
-</p>
+    <div class="col-md-4">
 
-<a href="/admin/"
-   class="btn btn-primary">
+        <div class="card shadow">
 
-Admin Panel
+            <div class="card-body text-center">
 
-</a>
+                <h3>💰</h3>
+
+                <h5>Track Expenses</h5>
+
+                <p>Record every expense easily.</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card shadow">
+
+            <div class="card-body text-center">
+
+                <h3>📈</h3>
+
+                <h5>Reports</h5>
+
+                <p>View monthly reports instantly.</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card shadow">
+
+            <div class="card-body text-center">
+
+                <h3>🔒</h3>
+
+                <h5>Secure</h5>
+
+                <p>Your data is safe and protected.</p>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 

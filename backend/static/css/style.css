@@ -1,14 +1,108 @@
-html,body {
-    height: 100%;
-}
-body{
+/* ---------- Global ---------- */
 
-    background:#f8f9fa;
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background: #121212;
+    color: #f8f9fa;
+
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
+
+
+/* ---------- Main Content ---------- */
+
 .container {
-    flex : 1;
+    flex: 1;
+}
+
+
+/* ---------- Navbar ---------- */
+
+.navbar {
+    background: #1c1c1c !important;
+    border-bottom: 1px solid #343a40;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-link {
+    color: #d1d1d1 !important;
+    transition: .3s;
+}
+
+.nav-link:hover {
+    color: #0d6efd !important;
+}
+
+
+/* ---------- Buttons ---------- */
+
+.btn-primary {
+    border-radius: 10px;
+}
+
+.btn-success {
+    border-radius: 10px;
+}
+
+
+/* ---------- Cards ---------- */
+
+.card {
+
+    background: #1e1e1e;
+
+    color: white;
+
+    border: 1px solid #2f2f2f;
+
+    border-radius: 15px;
+
+    transition: .3s;
+
+}
+
+.card:hover {
+
+    transform: translateY(-8px);
+
+    box-shadow: 0 8px 20px rgba(0,0,0,.4);
+
+}
+
+
+/* ---------- Footer ---------- */
+
+.footer {
+
+    background: #1c1c1c;
+
+    border-top: 1px solid #343a40;
+
+    color: #bdbdbd;
+
+}
+
+.footer h5 {
+
+    color: white;
+
+}
+
+.footer small {
+
+    color: #8d8d8d;
+
 }
