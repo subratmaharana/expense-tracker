@@ -1,83 +1,390 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Home
+Expense Tracker Pro
 {% endblock %}
 
 {% block content %}
 
-<div class="text-center py-5">
+<!-- ================= HERO ================= -->
 
-    <h1 class="display-4 fw-bold">
-        Expense Tracker
-    </h1>
+<section class="hero py-5">
 
-    <p class="lead mt-3">
-        Track your income and expenses with ease.
+    <div class="row align-items-center">
+
+        <div class="col-lg-6">
+
+            <span class="badge bg-primary px-3 py-2 mb-3">
+
+                Smart Personal Finance
+
+            </span>
+
+            <h1 class="display-3 fw-bold">
+
+                Manage Your Money
+                <br>
+                With Confidence
+
+            </h1>
+
+            <p class="lead mt-4">
+
+                Track income, monitor expenses,
+                organize your budget and understand
+                your spending habits from one secure dashboard.
+
+            </p>
+
+            <div class="mt-4">
+
+                <a href="#"
+                   class="btn btn-primary btn-lg px-4 me-3">
+
+                    Get Started
+
+                </a>
+
+                <a href="#features"
+                   class="btn btn-outline-light btn-lg px-4">
+
+                    Learn More
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="hero-image">
+
+                <i class="bi bi-wallet2 display-1 text-primary"></i>
+
+                <h4 class="mt-4">
+
+                    Finance Illustration
+
+                </h4>
+
+                <p>
+
+                    Image will be added later.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= FEATURES ================= -->
+
+<section id="features" class="py-5">
+
+    <div class="text-center mb-5">
+
+        <h2 class="fw-bold">
+
+            Why Choose Expense Tracker Pro?
+
+        </h2>
+
+        <p class="text-secondary">
+
+            Everything you need to manage your personal finances.
+
+        </p>
+
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-lg-4 col-md-6">
+
+            <div class="card h-100">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-shield-lock display-5 text-primary"></i>
+
+                    <h4 class="mt-3">
+
+                        Secure Login
+
+                    </h4>
+
+                    <p>
+
+                        Authentication keeps your financial data protected.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+
+            <div class="card h-100">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-wallet2 display-5 text-success"></i>
+
+                    <h4 class="mt-3">
+
+                        Expense Tracking
+
+                    </h4>
+
+                    <p>
+
+                        Record daily income and expenses effortlessly.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+
+            <div class="card h-100">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-bar-chart-line display-5 text-warning"></i>
+
+                    <h4 class="mt-3">
+
+                        Reports
+
+                    </h4>
+
+                    <p>
+
+                        Understand your financial habits with reports.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+
+            <div class="card h-100">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-phone display-5 text-info"></i>
+
+                    <h4 class="mt-3">
+
+                        Responsive
+
+                    </h4>
+
+                    <p>
+
+                        Optimized for desktop, tablet and mobile.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+
+            <div class="card h-100">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-lightning-charge display-5 text-danger"></i>
+
+                    <h4 class="mt-3">
+
+                        Fast
+
+                    </h4>
+
+                    <p>
+
+                        Built with Django, MySQL and Bootstrap.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+
+            <div class="card h-100">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-stars display-5 text-primary"></i>
+
+                    <h4 class="mt-3">
+
+                        Modern UI
+
+                    </h4>
+
+                    <p>
+
+                        Beautiful interface with a smooth user experience.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+
+<section class="py-5">
+
+    <div class="text-center mb-5">
+
+        <h2 class="fw-bold">
+
+            How It Works
+
+        </h2>
+
+    </div>
+
+    <div class="row text-center g-4">
+
+        <div class="col-lg-4">
+
+            <div class="card h-100">
+
+                <div class="card-body">
+
+                    <i class="bi bi-person-plus display-4 text-primary"></i>
+
+                    <h4 class="mt-3">
+
+                        Create Account
+
+                    </h4>
+
+                    <p>
+
+                        Register your account securely.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+
+            <div class="card h-100">
+
+                <div class="card-body">
+
+                    <i class="bi bi-cash-stack display-4 text-success"></i>
+
+                    <h4 class="mt-3">
+
+                        Add Transactions
+
+                    </h4>
+
+                    <p>
+
+                        Save every income and expense.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+
+            <div class="card h-100">
+
+                <div class="card-body">
+
+                    <i class="bi bi-graph-up-arrow display-4 text-warning"></i>
+
+                    <h4 class="mt-3">
+
+                        Analyze Reports
+
+                    </h4>
+
+                    <p>
+
+                        Understand your spending habits.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= CTA ================= -->
+
+<section class="text-center py-5">
+
+    <h2 class="fw-bold">
+
+        Ready To Start Your Financial Journey?
+
+    </h2>
+
+    <p class="lead text-secondary">
+
+        Join Expense Tracker Pro today and take control of your finances.
+
     </p>
 
-    <a href="#" class="btn btn-primary btn-lg mt-3">
-        Get Started
+    <a href="#"
+       class="btn btn-primary btn-lg px-5 mt-3">
+
+        Create Free Account
+
     </a>
 
-</div>
-
-<div class="row mt-5">
-
-    <div class="col-md-4">
-
-        <div class="card shadow">
-
-            <div class="card-body text-center">
-
-                <h3>💰</h3>
-
-                <h5>Track Expenses</h5>
-
-                <p>Record every expense easily.</p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-md-4">
-
-        <div class="card shadow">
-
-            <div class="card-body text-center">
-
-                <h3>📈</h3>
-
-                <h5>Reports</h5>
-
-                <p>View monthly reports instantly.</p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-md-4">
-
-        <div class="card shadow">
-
-            <div class="card-body text-center">
-
-                <h3>🔒</h3>
-
-                <h5>Secure</h5>
-
-                <p>Your data is safe and protected.</p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
+</section>
 
 {% endblock %}
