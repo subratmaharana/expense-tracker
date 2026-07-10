@@ -9,4 +9,5 @@ urlpatterns = [
 
     path("" , home,name="home"),
     path ("accounts/" , include("accounts.urls")),
+    path("expenses/", include("expenses.urls")),
 ]
