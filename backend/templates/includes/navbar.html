@@ -1,5 +1,4 @@
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
-
     <div class="container">
 
         <a class="navbar-brand fw-bold fs-3" href="/">
@@ -7,13 +6,10 @@
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-
             <span class="navbar-toggler-icon"></span>
-
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
-
             <ul class="navbar-nav ms-auto align-items-lg-center">
 
                 <li class="nav-item">
@@ -25,37 +21,43 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#stats">Statistics</a>
+                    <a class="nav-link" href="#about">About</a>
+                </li>
+
+                {% if user.is_authenticated %}
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#about">About</a>
-                </li>
-                
-                <li class="nav-item me-2">
-
-                    <a class="btn btn-outline-light" href="{% url 'register' %}">
-
-                        Register
-
-                    </a>
-
+                    <span class="nav-link">👋 {{ user.username }}</span>
                 </li>
 
                 <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
-
-                    <a class="btn btn-success px-4" href="{% url 'login' %}">
-
-                        Login
-
+                    <a class="btn btn-danger px-4" href="{% url 'logout' %}">
+                        Logout
                     </a>
-
                 </li>
 
-            </ul>
+                {% else %}
 
+                <li class="nav-item me-2">
+                    <a class="btn btn-outline-light" href="{% url 'register' %}">
+                        Register
+                    </a>
+                </li>
+
+                <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+                    <a class="btn btn-success px-4" href="{% url 'login' %}">
+                        Login
+                    </a>
+                </li>
+
+                {% endif %}
+
+            </ul>
         </div>
 
     </div>
-
 </nav>
