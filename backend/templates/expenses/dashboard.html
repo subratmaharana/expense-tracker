@@ -6,8 +6,48 @@ Dashboard
 
 {% block content %}
 
-<h2>Welcome {{ user.username }}</h2>
+<div class="container mt-5">
 
-<p>You have successfully logged in.</p>
+    <h2 class="mb-3">Welcome, {{ user.username }} 👋</h2>
+
+    <p class="text-secondary">
+        Manage your expenses from your personal dashboard.
+    </p>
+
+    <div class="row mt-4">
+
+        <div class="col-md-4 mb-3">
+            <div class="card p-4 text-center">
+                <h4>📂 Categories</h4>
+                <p>Create and manage expense categories.</p>
+                <a href="{% url 'category_list' %}" class="btn btn-primary">
+                    Manage Categories
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card p-4 text-center">
+                <h4>💸 Expenses</h4>
+                <p>Add and manage your expenses.</p>
+                <button class="btn btn-secondary" disabled>
+                    Coming Soon
+                </button>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card p-4 text-center">
+                <h4>📊 Reports</h4>
+                <p>View your expense reports.</p>
+                <button class="btn btn-secondary" disabled>
+                    Coming Soon
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
 
 {% endblock %}
