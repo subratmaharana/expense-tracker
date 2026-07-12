@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}
+Expense Categories
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="text-center mb-4">
+        <h2>Expense Categories</h2>
+        <p class="text-secondary">
+            These categories are managed by the administrator.
+            Select one while adding an expense.
+        </p>
+    </div>
+
+    <table class="table table-dark table-hover">
+
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        {% for category in categories %}
+
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ category.name }}</td>
+            </tr>
+
+        {% empty %}
+
+            <tr>
+                <td colspan="2" class="text-center">
+                    No categories available.
+                </td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}
