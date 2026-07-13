@@ -38,11 +38,15 @@ Dashboard
 
         <div class="col-md-4 mb-3">
             <div class="card p-4 text-center">
-                <h4>📊 Reports</h4>
-                <p>View your expense reports.</p>
-                <button class="btn btn-secondary" disabled>
-                    Coming Soon
-                </button>
+
+                <h4>💸 Expenses</h4>
+
+                <p>Add and manage your expenses.</p>
+
+                <a href="{% url 'add_expense' %}" class="btn btn-success">
+                    ➕ Add Expense
+                </a>
+
             </div>
         </div>
 
