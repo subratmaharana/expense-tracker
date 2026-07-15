@@ -73,3 +73,46 @@ def expense_history(request):
             "expenses": expenses
         }
     )
+
+@login_required
+def edit_expense(request, id):
+
+    expense = Transaction.objects.get(
+        id=id,
+        user=request.user
+    )
+
+    categories = Category.objects.all()
+
+    if request.method == "POST":
+
+        expense.title = request.POST.get("title")
+        expense.amount = request.POST.get("amount")
+        expense.transaction_type = request.POST.get("transaction_type")
+        expense.category = Category.objects.get(
+            id=request.POST.get("category")
+        )
+        expense.date = request.POST.get("date")
+        expense.description = request.POST.get("description")
+
+        expense.save()
+
+        return redirect("expense_history")
+
+    return render(request, "expenses/edit_expense.html", {
+        "expense": expense,
+        "categories": categories
+    })
+
+
+@login_required
+def delete_expense(request, id):
+
+    expense = Transaction.objects.get(
+        id=id,
+        user=request.user
+    )
+
+    expense.delete()
+
+    return redirect("expense_history")
