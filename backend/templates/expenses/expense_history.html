@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}
+Expense History
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<h2 class="mb-4">
+📜 Expense History
+</h2>
+
+{% if expenses %}
+
+<table class="table table-dark table-hover align-middle">
+
+<thead>
+
+<tr>
+
+<th>#</th>
+
+<th>Title</th>
+
+<th>Category</th>
+
+<th>Amount</th>
+
+<th>Type</th>
+
+<th>Date</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for expense in expenses %}
+
+<tr>
+
+<td>{{ forloop.counter }}</td>
+
+<td>{{ expense.title }}</td>
+
+<td>{{ expense.category.name }}</td>
+
+<td>₹{{ expense.amount }}</td>
+
+<td>{{ expense.transaction_type }}</td>
+
+<td>{{ expense.date }}</td>
+
+<td>
+
+<button class="btn btn-warning btn-sm" disabled>
+
+Edit
+
+</button>
+
+<button class="btn btn-danger btn-sm" disabled>
+
+Delete
+
+</button>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% else %}
+
+<div class="alert alert-info">
+
+No expenses added yet.
+
+</div>
+
+{% endif %}
+
+</div>
+
+{% endblock %}

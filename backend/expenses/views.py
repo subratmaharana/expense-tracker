@@ -58,3 +58,18 @@ def add_expense(request):
             "categories": categories
         }
     )
+
+@login_required
+def expense_history(request):
+
+    expenses = Transaction.objects.filter(
+        user=request.user
+    ).order_by("-date")
+
+    return render(
+        request,
+        "expenses/expense_history.html",
+        {
+            "expenses": expenses
+        }
+    )
