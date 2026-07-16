@@ -1,6 +1,6 @@
 from django.shortcuts import render , redirect
 from django.contrib.auth.decorators import login_required
-from .models import Category , Transaction
+from .models import Category , Transaction ,MonthlyIncome
 
 
 def home(request):
@@ -116,3 +116,27 @@ def delete_expense(request, id):
     expense.delete()
 
     return redirect("expense_history")
+
+@login_required
+def set_income(request):
+
+    income = MonthlyIncome.objects.filter(user=request.user).first()
+
+    if request.method == "POST":
+
+        amount = request.POST.get("amount")
+
+        if income:
+            income.amount = amount
+            income.save()
+        else:
+            MonthlyIncome.objects.create(
+                user=request.user,
+                amount=amount
+            )
+
+        return redirect("dashboard")
+
+    return render(request, "expenses/set_income.html", {
+        "income": income
+    })
