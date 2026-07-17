@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
 
@@ -37,7 +38,15 @@ class Transaction(models.Model):
         on_delete=models.CASCADE
     )
 
-    date = models.DateField()
+    paid_from = models.ForeignKey(
+    "IncomeSource",
+    on_delete=models.CASCADE,
+    null=True,
+    blank=True
+    )
+
+    date = models.DateField() 
+    
 
     description = models.TextField(
         blank=True
@@ -46,9 +55,31 @@ class Transaction(models.Model):
     def __str__(self):
         return self.title
 
-class MonthlyIncome(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+class IncomeSource(models.Model):
+
+    SOURCE_CHOICES = [
+        ('Salary', 'Salary'),
+        ('Business', 'Business'),
+        ('Freelancing', 'Freelancing'),
+        ('Pocket Money', 'Pocket Money'),
+        ('Scholarship', 'Scholarship'),
+        ('Investment', 'Investment'),
+        ('Rental Income', 'Rental Income'),
+        ('Other', 'Other'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    source = models.CharField(max_length=30, choices=SOURCE_CHOICES)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'source'],
+                name='unique_user_income_source'
+            )
+        ]
+
     def __str__(self):
-        return f"{self.user.username} - ₹{self.amount}"
+        return f"{self.user.username} - {self.source}"

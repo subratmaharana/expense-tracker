@@ -9,5 +9,7 @@ urlpatterns = [
     path("expenses/history/", views.expense_history, name="expense_history"),
     path("expenses/edit/<int:id>/", views.edit_expense, name="edit_expense"),
     path("expenses/delete/<int:id>/", views.delete_expense, name="delete_expense"),
-    path("income/" ,views.set_income , name="set_income"),
+   
+    path("income/", views.income_list, name="income_list"),
+    path("income/add/", views.add_income, name="add_income"),
 ]

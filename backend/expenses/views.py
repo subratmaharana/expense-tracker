@@ -1,6 +1,8 @@
 from django.shortcuts import render , redirect
+from django.db.models import Sum
+from .forms import IncomeSourceForm
 from django.contrib.auth.decorators import login_required
-from .models import Category , Transaction ,MonthlyIncome
+from .models import Category , Transaction ,IncomeSource
 
 
 def home(request):
@@ -9,7 +11,25 @@ def home(request):
 
 @login_required
 def dashboard(request):
-    return render(request, "expenses/dashboard.html")
+
+    total_income = IncomeSource.objects.filter(
+        user=request.user
+    ).aggregate(total=Sum("amount"))["total"] or 0
+
+    total_expense = Transaction.objects.filter(
+        user=request.user,
+        transaction_type="Expense"
+    ).aggregate(total=Sum("amount"))["total"] or 0
+
+    remaining_balance = total_income - total_expense
+
+    context = {
+        "total_income": total_income,
+        "total_expense": total_expense,
+        "remaining_balance": remaining_balance,
+    }
+
+    return render(request, "expenses/dashboard.html", context)
 
 
 @login_required
@@ -20,50 +40,39 @@ def view_category(request):
         "categories": categories
     })
 
+
 @login_required
 def add_expense(request):
 
     categories = Category.objects.all()
+    income_sources = IncomeSource.objects.filter(user=request.user)
 
     if request.method == "POST":
 
-        category = Category.objects.get(
-            id=request.POST.get("category")
-        )
-
         Transaction.objects.create(
-
             user=request.user,
-
             title=request.POST.get("title"),
-
             amount=request.POST.get("amount"),
-
-            transaction_type=request.POST.get("transaction_type"),
-
-            category=category,
-
+            transaction_type="Expense",
+            category=Category.objects.get(id=request.POST.get("category")),
+            paid_from=IncomeSource.objects.get(id=request.POST.get("paid_from")),
             date=request.POST.get("date"),
-
-            description=request.POST.get("description")
-
+            description=request.POST.get("description"),
         )
 
-        return redirect("dashboard")
+        return redirect("expense_history")
 
-    return render(
-        request,
-        "expenses/add_expense.html",
-        {
-            "categories": categories
-        }
-    )
+    return render(request, "expenses/add_expense.html", {
+        "categories": categories,
+        "income_sources": income_sources,
+    })
 
 @login_required
 def expense_history(request):
 
     expenses = Transaction.objects.filter(
-        user=request.user
+        user=request.user ,
+        transaction_type="Expense"
     ).order_by("-date")
 
     return render(
@@ -117,26 +126,38 @@ def delete_expense(request, id):
 
     return redirect("expense_history")
 
-@login_required
-def set_income(request):
 
-    income = MonthlyIncome.objects.filter(user=request.user).first()
+@login_required
+def income_list(request):
+
+    incomes = IncomeSource.objects.filter(user=request.user)
+
+    total_income = sum(income.amount for income in incomes)
+
+    return render(request, "expenses/income_list.html", {
+        "incomes": incomes,
+        "total_income": total_income,
+    })
+
+@login_required
+def add_income(request):
 
     if request.method == "POST":
 
-        amount = request.POST.get("amount")
+        form = IncomeSourceForm(request.POST)
 
-        if income:
-            income.amount = amount
+        if form.is_valid():
+
+            income = form.save(commit=False)
+            income.user = request.user
             income.save()
-        else:
-            MonthlyIncome.objects.create(
-                user=request.user,
-                amount=amount
-            )
 
-        return redirect("dashboard")
+            return redirect("income_list")
 
-    return render(request, "expenses/set_income.html", {
-        "income": income
+    else:
+
+        form = IncomeSourceForm()
+
+    return render(request, "expenses/add_income.html", {
+        "form": form
     })
