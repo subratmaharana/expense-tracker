@@ -1,5 +1,5 @@
 from django.shortcuts import render , redirect
-from django.db.models import Sum
+from django.db.models import Sum ,Count
 from .forms import IncomeSourceForm
 from django.contrib.auth.decorators import login_required
 from .models import Category , Transaction ,IncomeSource
@@ -7,7 +7,6 @@ from .models import Category , Transaction ,IncomeSource
 
 def home(request):
     return render(request, "home.html")
-
 
 @login_required
 def dashboard(request):
@@ -24,20 +23,38 @@ def dashboard(request):
     remaining_balance = total_income - total_expense
 
     total_transactions = Transaction.objects.filter(
-    user=request.user
+        user=request.user
     ).count()
 
     recent_transactions = Transaction.objects.filter(
-    user=request.user
+        user=request.user
     ).order_by("-date")[:5]
 
+    category_expenses = (
+        Transaction.objects.filter(
+            user=request.user,
+            transaction_type="Expense"
+        )
+        .values("category__name")
+        .annotate(total=Sum("amount"))
+    )
+
+    chart_labels = []
+    chart_data = []
+
+    for item in category_expenses:
+        chart_labels.append(item["category__name"])
+        chart_data.append(float(item["total"]))
+
     context = {
-    "total_income": total_income,
-    "total_expense": total_expense,
-    "remaining_balance": remaining_balance,
-    "total_transactions": total_transactions,
-    "recent_transactions": recent_transactions,
-}
+        "total_income": total_income,
+        "total_expense": total_expense,
+        "remaining_balance": remaining_balance,
+        "total_transactions": total_transactions,
+        "recent_transactions": recent_transactions,
+        "chart_labels": chart_labels,
+        "chart_data": chart_data,
+    }
 
     return render(request, "expenses/dashboard.html", context)
 
