@@ -6,70 +6,182 @@
 
 <div class="container mt-5">
 
-    <h2>Welcome, {{ user.username }} 👋</h2>
-    <p class="text-secondary">Manage your personal finances from one dashboard.</p>
+    <h2>👋 Welcome back, {{ user.username }}</h2>
 
-    <div class="row mt-4">
+    <p class="text-secondary">
+        Track your income, expenses and savings from one place.
+    </p>
 
-        <div class="col-md-4 mb-3">
+    <!-- Summary Cards -->
+
+    <div class="row mt-4 g-4">
+
+        <div class="col-lg-3 col-md-6">
             <div class="card text-center p-4 h-100">
                 <h5>💰 Total Income</h5>
                 <h3>₹{{ total_income }}</h3>
-                <a href="{% url 'income_list' %}" class="btn btn-success mt-2">
+
+                <a href="{% url 'income_list' %}" class="btn btn-success mt-3">
                     View Income Sources
                 </a>
+
             </div>
         </div>
 
-        <div class="col-md-4 mb-3">
+        <div class="col-lg-3 col-md-6">
             <div class="card text-center p-4 h-100">
                 <h5>💸 Total Expense</h5>
                 <h3>₹{{ total_expense }}</h3>
-                <a href="{% url 'expense_history' %}" class="btn btn-danger mt-2">
+
+                <a href="{% url 'expense_history' %}" class="btn btn-danger mt-3">
                     Expense History
                 </a>
+
             </div>
         </div>
 
-        <div class="col-md-4 mb-3">
+        <div class="col-lg-3 col-md-6">
             <div class="card text-center p-4 h-100">
+
                 <h5>💵 Available Balance</h5>
+
                 <h3>₹{{ remaining_balance }}</h3>
+
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card text-center p-4 h-100">
+
+                <h5>📄 Total Transactions</h5>
+
+                <h3>{{ total_transactions }}</h3>
+
             </div>
         </div>
 
     </div>
 
-    <div class="row mt-4">
+    <!-- Quick Actions -->
+
+    <div class="row mt-5">
 
         <div class="col-md-4 mb-3">
+
             <div class="card text-center p-4 h-100">
+
                 <h4>➕ Add Expense</h4>
+
                 <p>Record a new expense.</p>
+
                 <a href="{% url 'add_expense' %}" class="btn btn-primary">
+
                     Add Expense
+
                 </a>
+
             </div>
+
         </div>
 
         <div class="col-md-4 mb-3">
+
             <div class="card text-center p-4 h-100">
+
                 <h4>📂 Categories</h4>
+
                 <p>View expense categories.</p>
+
                 <a href="{% url 'view_category' %}" class="btn btn-primary">
+
                     View Categories
+
                 </a>
+
             </div>
+
         </div>
 
         <div class="col-md-4 mb-3">
+
             <div class="card text-center p-4 h-100">
+
                 <h4>💼 Income Sources</h4>
+
                 <p>Add or update your income sources.</p>
+
                 <a href="{% url 'income_list' %}" class="btn btn-success">
+
                     Manage Income
+
                 </a>
+
             </div>
+
+        </div>
+
+    </div>
+
+    <!-- Recent Transactions -->
+
+    <div class="card mt-5 p-4">
+
+        <h4 class="mb-4">📝 Recent Transactions</h4>
+
+        <div class="table-responsive">
+
+            <table class="table table-dark table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Paid From</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for transaction in recent_transactions %}
+
+                    <tr>
+
+                        <td>{{ transaction.title }}</td>
+
+                        <td>{{ transaction.category.name }}</td>
+
+                        <td>{{ transaction.paid_from.source }}</td>
+
+                        <td>₹{{ transaction.amount }}</td>
+
+                        <td>{{ transaction.date }}</td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="5" class="text-center">
+
+                            No Transactions Found
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
         </div>
 
     </div>

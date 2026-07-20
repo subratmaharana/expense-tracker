@@ -23,11 +23,21 @@ def dashboard(request):
 
     remaining_balance = total_income - total_expense
 
+    total_transactions = Transaction.objects.filter(
+    user=request.user
+    ).count()
+
+    recent_transactions = Transaction.objects.filter(
+    user=request.user
+    ).order_by("-date")[:5]
+
     context = {
-        "total_income": total_income,
-        "total_expense": total_expense,
-        "remaining_balance": remaining_balance,
-    }
+    "total_income": total_income,
+    "total_expense": total_expense,
+    "remaining_balance": remaining_balance,
+    "total_transactions": total_transactions,
+    "recent_transactions": recent_transactions,
+}
 
     return render(request, "expenses/dashboard.html", context)
 
