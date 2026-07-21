@@ -50,6 +50,36 @@ def dashboard(request):
     .annotate(total=Sum("amount"))
     .order_by("month")
     )
+    monthly_income=(
+    IncomeSource.objects.filter(
+        user=request.user
+    )
+    .annotate(month=TruncMonth("date"))
+    .values("month")
+    .annotate(total=Sum("amount"))
+    .order_by("month")
+)
+
+    line_labels=[]
+    income_data=[]
+    expense_data=[]
+
+    income_dict={}
+    expense_dict={}
+
+    for item in monthly_income:
+        income_dict[item["month"].strftime("%b")]=float(item["total"])
+
+    for item in monthly_expenses:   
+        expense_dict[item["month"].strftime("%b")]=float(item["total"])
+
+    months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+
+    for month in months:
+        if month in income_dict or month in expense_dict:
+            line_labels.append(month)
+            income_data.append(income_dict.get(month,0))
+            expense_data.append(expense_dict.get(month,0))
 
     bar_labels=[]
     bar_data=[]
@@ -75,6 +105,9 @@ def dashboard(request):
         "chart_data": chart_data,
         "bar_labels":bar_labels,
         "bar_data":bar_data,
+        "line_labels":line_labels,
+        "income_data":income_data,
+        "expense_data":expense_data,
     }
 
     return render(request, "expenses/dashboard.html", context)

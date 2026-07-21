@@ -58,28 +58,32 @@ class Transaction(models.Model):
 
 class IncomeSource(models.Model):
 
-    SOURCE_CHOICES = [
-        ('Salary', 'Salary'),
-        ('Business', 'Business'),
-        ('Freelancing', 'Freelancing'),
-        ('Pocket Money', 'Pocket Money'),
-        ('Scholarship', 'Scholarship'),
-        ('Investment', 'Investment'),
-        ('Rental Income', 'Rental Income'),
-        ('Other', 'Other'),
+    SOURCE_CHOICES=[
+        ('Salary','Salary'),
+        ('Business','Business'),
+        ('Freelancing','Freelancing'),
+        ('Pocket Money','Pocket Money'),
+        ('Scholarship','Scholarship'),
+        ('Investment','Investment'),
+        ('Rental Income','Rental Income'),
+        ('Other','Other'),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    source = models.CharField(max_length=30, choices=SOURCE_CHOICES)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    source=models.CharField(max_length=30,choices=SOURCE_CHOICES)
+    amount=models.DecimalField(max_digits=10,decimal_places=2)
+    date=models.DateField()
 
     class Meta:
-        constraints = [
+        constraints=[
             models.UniqueConstraint(
-                fields=['user', 'source'],
+                fields=['user','source'],
                 name='unique_user_income_source'
             )
         ]
+
+    def __str__(self):
+        return f"{self.source} - ₹{self.amount}"
 
     def __str__(self):
         return f"{self.user.username} - {self.source}"

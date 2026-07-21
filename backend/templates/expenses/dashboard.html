@@ -92,6 +92,19 @@
         </div>
 
     </div>
+    <div class="card mt-5 p-4">
+
+        <h4 class="text-center mb-4">
+            📈 Income vs Expense
+        </h4>
+
+        <div style="height:350px;">
+
+            <canvas id="incomeExpenseChart"></canvas>
+
+        </div>
+
+    </div>
 
     <!-- Recent Transactions -->
 
@@ -201,6 +214,9 @@
     {{ chart_data|json_script:"chart-data" }}
     {{ bar_labels|json_script:"bar-labels" }}
     {{ bar_data|json_script:"bar-data" }}
+    {{ line_labels|json_script:"line-labels" }}
+    {{ income_data|json_script:"income-data" }}
+    {{ expense_data|json_script:"expense-data" }}
 
 
     <script>
@@ -399,6 +415,118 @@
 
                         font: {
                             size: 18
+                        }
+
+                    }
+
+                }
+
+            }
+
+        });
+
+        const lineLabels = JSON.parse(
+            document.getElementById("line-labels").textContent
+        );
+
+        const incomeData = JSON.parse(
+            document.getElementById("income-data").textContent
+        );
+
+        const expenseData = JSON.parse(
+            document.getElementById("expense-data").textContent
+        );
+
+        const lineCtx = document.getElementById("incomeExpenseChart");
+
+        new Chart(lineCtx, {
+
+            type: "line",
+
+            data: {
+
+                labels: lineLabels,
+
+                datasets: [
+
+                    {
+                        label: "Income",
+                        data: incomeData,
+                        borderColor: "#4CAF50",
+                        backgroundColor: "#4CAF50",
+                        tension: 0.4,
+                        fill: false
+                    },
+
+                    {
+                        label: "Expense",
+                        data: expenseData,
+                        borderColor: "#F44336",
+                        backgroundColor: "#F44336",
+                        tension: 0.4,
+                        fill: false
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    title: {
+
+                        display: true,
+
+                        text: "Monthly Income vs Expense",
+
+                        color: "#ffffff",
+
+                        font: {
+                            size: 18
+                        }
+
+                    },
+
+                    legend: {
+
+                        labels: {
+                            color: "#ffffff"
+                        }
+
+                    }
+
+                },
+
+                scales: {
+
+                    x: {
+
+                        ticks: {
+                            color: "#ffffff"
+                        },
+
+                        grid: {
+                            display: false
+                        }
+
+                    },
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+                            color: "#ffffff"
+                        },
+
+                        grid: {
+                            color: "rgba(255,255,255,0.1)"
                         }
 
                     }
