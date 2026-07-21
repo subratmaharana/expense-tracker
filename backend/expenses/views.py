@@ -1,5 +1,6 @@
 from django.shortcuts import render , redirect
 from django.db.models import Sum ,Count
+from django.db.models.functions import TruncMonth
 from .forms import IncomeSourceForm
 from django.contrib.auth.decorators import login_required
 from .models import Category , Transaction ,IncomeSource
@@ -39,6 +40,24 @@ def dashboard(request):
         .annotate(total=Sum("amount"))
     )
 
+    monthly_expenses=(
+    Transaction.objects.filter(
+        user=request.user,
+        transaction_type="Expense"
+    )
+    .annotate(month=TruncMonth("date"))
+    .values("month")
+    .annotate(total=Sum("amount"))
+    .order_by("month")
+    )
+
+    bar_labels=[]
+    bar_data=[]
+
+    for item in monthly_expenses:
+        bar_labels.append(item["month"].strftime("%b"))
+        bar_data.append(float(item["total"]))
+
     chart_labels = []
     chart_data = []
 
@@ -54,6 +73,8 @@ def dashboard(request):
         "recent_transactions": recent_transactions,
         "chart_labels": chart_labels,
         "chart_data": chart_data,
+        "bar_labels":bar_labels,
+        "bar_data":bar_data,
     }
 
     return render(request, "expenses/dashboard.html", context)

@@ -151,120 +151,154 @@
 
     <!-- Pie Chart -->
 
-   <div class="card mt-5 p-4">
+    <!-- Charts -->
 
-    <h4 class="text-center mb-4">
-        📊 Expense by Category
-    </h4>
+    <div class="row mt-5">
 
-    <div style="width: 350px;;height:350px;margin:auto;">
+        <div class="col-lg-6 mb-4">
 
-        <canvas id="expensePieChart"></canvas>
+            <div class="card p-4 h-100">
+
+                <h4 class="text-center mb-4">
+                    📊 Expense by Category
+                </h4>
+
+                <div style="width:350px;height:350px;margin:auto;">
+
+                    <canvas id="expensePieChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6 mb-4">
+
+            <div class="card p-4 h-100">
+
+                <h4 class="text-center mb-4">
+                    📅 Monthly Expenses
+                </h4>
+
+                <div style="height:350px;">
+
+                    <canvas id="expenseBarChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 
-</div>
+    {% endblock %}
 
-{% endblock %}
+    {% block scripts %}
 
-{% block scripts %}
+    {{ chart_labels|json_script:"chart-labels" }}
+    {{ chart_data|json_script:"chart-data" }}
+    {{ bar_labels|json_script:"bar-labels" }}
+    {{ bar_data|json_script:"bar-data" }}
 
-{{ chart_labels|json_script:"chart-labels" }}
-{{ chart_data|json_script:"chart-data" }}
 
+    <script>
 
-<script>
+        const labels = JSON.parse(
+            document.getElementById("chart-labels").textContent
+        );
 
-const labels = JSON.parse(
-    document.getElementById("chart-labels").textContent
-);
+        const data = JSON.parse(
+            document.getElementById("chart-data").textContent
+        );
 
-const data = JSON.parse(
-    document.getElementById("chart-data").textContent
-);
+        const colors = [
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+            "#4BC0C0",
+            "#9966FF",
+            "#FF9F40",
+            "#8BC34A",
+            "#E91E63",
+            "#3F51B5",
+            "#00BCD4",
+            "#795548",
+            "#9C27B0"
+        ];
 
-const colors = [
-    "#FF6384",
-    "#36A2EB",
-    "#FFCE56",
-    "#4BC0C0",
-    "#9966FF",
-    "#FF9F40",
-    "#8BC34A",
-    "#E91E63",
-    "#3F51B5",
-    "#00BCD4",
-    "#795548",
-    "#9C27B0"
-];
+        const ctx = document.getElementById("expensePieChart");
 
-const ctx = document.getElementById("expensePieChart");
+        new Chart(ctx, {
 
-new Chart(ctx, {
+            type: "doughnut",
 
-    type: "doughnut",
+            data: {
 
-    data: {
+                labels: labels,
 
-        labels: labels,
+                datasets: [{
 
-        datasets: [{
+                    label: "Expenses",
 
-            label: "Expenses",
+                    data: data,
 
-            data: data,
+                    backgroundColor: colors,
 
-            backgroundColor: colors,
+                    borderColor: "#ffffff",
 
-            borderColor: "#ffffff",
+                    borderWidth: 2,
 
-            borderWidth: 2,
+                    hoverOffset: 18
 
-            hoverOffset: 18
-
-        }]
-
-    },
-
-    options: {
-
-        responsive: true,
-
-        maintainAspectRatio: false,
-
-        cutout: "60%",
-
-        plugins: {
-
-            title: {
-
-                display: true,
-
-                text: "Expense Distribution by Category",
-
-                color: "#ffffff",
-
-                font: {
-
-                    size: 20
-
-                }
+                }]
 
             },
 
-            legend: {
+            options: {
 
-                position: "bottom",
+                responsive: true,
 
-                labels: {
+                maintainAspectRatio: false,
 
-                    color: "#ffffff",
+                cutout: "60%",
 
-                    padding: 20,
+                plugins: {
 
-                    font: {
+                    title: {
 
-                        size: 14
+                        display: true,
+
+                        text: "Expense Distribution by Category",
+
+                        color: "#ffffff",
+
+                        font: {
+
+                            size: 20
+
+                        }
+
+                    },
+
+                    legend: {
+
+                        position: "bottom",
+
+                        labels: {
+
+                            color: "#ffffff",
+
+                            padding: 20,
+
+                            font: {
+
+                                size: 14
+
+                            }
+
+                        }
 
                     }
 
@@ -272,12 +306,109 @@ new Chart(ctx, {
 
             }
 
-        }
+        });
 
-    }
+        const barLabels = JSON.parse(
+            document.getElementById("bar-labels").textContent
+        );
 
-});
+        const barData = JSON.parse(
+            document.getElementById("bar-data").textContent
+        );
 
-</script>
+        const barCtx = document.getElementById("expenseBarChart");
 
-{% endblock %}
+        new Chart(barCtx, {
+
+            type: "bar",
+
+            data: {
+
+                labels: barLabels,
+
+                datasets: [{
+
+                    label: "Monthly Expenses",
+
+                    data: barData,
+
+                    backgroundColor: "#36A2EB",
+
+                    borderColor: "#1E88E5",
+
+                    borderWidth: 1,
+
+                    borderRadius: 8,
+
+                    categoryPercentage: 0.5,
+
+                    barPercentage: 0.6
+
+                }]
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+                            color: "#ffffff"
+                        },
+
+                        grid: {
+                            color: "rgba(255,255,255,0.1)"
+                        }
+
+                    },
+
+                    x: {
+
+                        ticks: {
+                            color: "#ffffff"
+                        },
+
+                        grid: {
+                            display: false
+                        }
+
+                    }
+
+                },
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    },
+
+                    title: {
+
+                        display: true,
+
+                        text: "Monthly Expense Overview",
+
+                        color: "#ffffff",
+
+                        font: {
+                            size: 18
+                        }
+
+                    }
+
+                }
+
+            }
+
+        });
+
+    </script>
+
+    {% endblock %}
