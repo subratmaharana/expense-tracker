@@ -1,5 +1,5 @@
 from django.shortcuts import render , redirect
-from django.db.models import Sum ,Count
+from django.db.models import Sum ,Count,Q
 from django.db.models.functions import TruncMonth
 from .forms import IncomeSourceForm
 from django.contrib.auth.decorators import login_required
@@ -148,19 +148,36 @@ def add_expense(request):
         "income_sources": income_sources,
     })
 
+from django.db.models import Q
+
 @login_required
 def expense_history(request):
 
-    expenses = Transaction.objects.filter(
-        user=request.user ,
+    search=request.GET.get("search","")
+
+    expenses=Transaction.objects.filter(
+        user=request.user,
         transaction_type="Expense"
-    ).order_by("-date")
+    )
+
+    if search:
+
+        expenses=expenses.filter(
+
+            Q(title__icontains=search)|
+            Q(category__name__icontains=search)|
+            Q(description__icontains=search)
+
+        )
+
+    expenses=expenses.order_by("-date")
 
     return render(
         request,
         "expenses/expense_history.html",
         {
-            "expenses": expenses
+            "expenses":expenses,
+            "search":search
         }
     )
 

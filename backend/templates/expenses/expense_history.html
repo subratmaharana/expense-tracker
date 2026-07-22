@@ -18,81 +18,129 @@ Expense History
 
     </div>
 
-    <div class="card shadow">
+    <!-- Search -->
+
+    <div class="card bg-dark border-secondary mb-4">
 
         <div class="card-body">
 
-            <table class="table table-hover align-middle">
+            <form method="GET">
 
-                <thead class="table-dark">
+                <div class="row g-2">
 
-                    <tr>
+                    <div class="col-md-8">
 
-                        <th>Title</th>
+                        <input
+                            type="text"
+                            name="search"
+                            class="form-control"
+                            placeholder="Search by title, category or description..."
+                            value="{{ search }}"
+                        >
 
-                        <th>Amount</th>
+                    </div>
 
-                        <th>Category</th>
+                    <div class="col-md-2 d-grid">
 
-                        <th>Paid From</th>
+                        <button class="btn btn-primary">
+                            🔍 Search
+                        </button>
 
-                        <th>Date</th>
+                    </div>
 
-                        <th>Description</th>
+                    <div class="col-md-2 d-grid">
 
-                        <th>Actions</th>
+                        <a href="{% url 'expense_history' %}" class="btn btn-secondary">
+                            Reset
+                        </a>
 
-                    </tr>
+                    </div>
 
-                </thead>
+                </div>
 
-                <tbody>
+            </form>
 
-                    {% for expense in expenses %}
+        </div>
 
-                    <tr>
+    </div>
 
-                        <td>{{ expense.title }}</td>
+    <!-- Expense Table -->
 
-                        <td>₹{{ expense.amount }}</td>
+    <div class="card bg-dark border-secondary shadow">
 
-                        <td>{{ expense.category.name }}</td>
+        <div class="card-body">
 
-                        <td>{{ expense.paid_from.source }}</td>
+            <div class="table-responsive">
 
-                        <td>{{ expense.date }}</td>
+                <table class="table table-dark table-hover align-middle mb-0">
 
-                        <td>{{ expense.description }}</td>
+                    <thead>
 
-                        <td>
+                        <tr>
 
-                            <a href="{% url 'edit_expense' expense.id %}" class="btn btn-warning btn-sm">
-                                Edit
-                            </a>
+                            <th>Title</th>
+                            <th>Amount</th>
+                            <th>Category</th>
+                            <th>Paid From</th>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Actions</th>
 
-                            <a href="{% url 'delete_expense' expense.id %}" class="btn btn-danger btn-sm">
-                                Delete
-                            </a>
+                        </tr>
 
-                        </td>
+                    </thead>
 
-                    </tr>
+                    <tbody>
 
-                    {% empty %}
+                        {% for expense in expenses %}
 
-                    <tr>
+                        <tr>
 
-                        <td colspan="7" class="text-center">
-                            No expenses found.
-                        </td>
+                            <td>{{ expense.title }}</td>
 
-                    </tr>
+                            <td class="text-success fw-bold">
+                                ₹{{ expense.amount }}
+                            </td>
 
-                    {% endfor %}
+                            <td>{{ expense.category.name }}</td>
 
-                </tbody>
+                            <td>{{ expense.paid_from.source }}</td>
 
-            </table>
+                            <td>{{ expense.date }}</td>
+
+                            <td>{{ expense.description }}</td>
+
+                            <td>
+
+                                <a href="{% url 'edit_expense' expense.id %}" class="btn btn-warning btn-sm">
+                                    Edit
+                                </a>
+
+                                <a href="{% url 'delete_expense' expense.id %}" class="btn btn-danger btn-sm">
+                                    Delete
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="7" class="text-center text-light py-4">
+                                No expenses found.
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
         </div>
 
