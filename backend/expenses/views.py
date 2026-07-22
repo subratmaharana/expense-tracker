@@ -1,10 +1,12 @@
 from django.shortcuts import render , redirect
 from django.db.models import Sum ,Count,Q
 from django.db.models.functions import TruncMonth
-from .forms import IncomeSourceForm
+from .forms import IncomeSourceForm , BudgetForm
 from django.contrib.auth.decorators import login_required
 from .models import Category , Transaction ,IncomeSource
 
+from datetime import datetime
+from .models import Budget
 
 def home(request):
     return render(request, "home.html")
@@ -20,6 +22,27 @@ def dashboard(request):
         user=request.user,
         transaction_type="Expense"
     ).aggregate(total=Sum("amount"))["total"] or 0
+
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+
+    budget = Budget.objects.filter(
+        user=request.user,
+        month=current_month,
+        year=current_year
+    ).first()
+
+    budget_amount = budget.amount if budget else 0
+
+    remaining_budget = budget_amount - total_expense
+
+    budget_used = 0
+
+    if budget_amount > 0:
+        budget_used = (total_expense / budget_amount) * 100
+
+    if budget_used > 100:
+        budget_used = 100
 
     remaining_balance = total_income - total_expense
 
@@ -108,6 +131,9 @@ def dashboard(request):
         "line_labels":line_labels,
         "income_data":income_data,
         "expense_data":expense_data,
+        "budget_amount": budget_amount,
+        "remaining_budget": remaining_budget,
+        "budget_used": budget_used,
     }
 
     return render(request, "expenses/dashboard.html", context)
@@ -258,4 +284,36 @@ def add_income(request):
 
     return render(request, "expenses/add_income.html", {
         "form": form
+    })
+
+@login_required
+def set_budget(request):
+
+    month=datetime.now().month
+    year=datetime.now().year
+    budget,created=Budget.objects.get_or_create(
+        user=request.user,
+        month=month,
+        year=year,
+
+        defaults={
+            "amount":0
+        }
+    )
+    if request.method=="POST":
+
+        form=BudgetForm(request.POST,instance=budget)
+
+        if form.is_valid():
+
+            form.save()
+
+            return redirect("dashboard")
+
+    else:
+        form=BudgetForm(instance=budget)
+    return render(request,"expenses/set_budget.html",{
+
+        "form":form
+
     })

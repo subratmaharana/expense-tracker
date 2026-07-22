@@ -54,11 +54,49 @@
 
     </div>
 
+    <div class="card mt-5 p-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4>💰 Monthly Budget</h4>
+
+            <a href="{% url 'set_budget' %}" class="btn btn-primary">
+                Update Budget
+            </a>
+        </div>
+
+        <div class="row text-center">
+
+            <div class="col-md-4">
+                <h6>Budget</h6>
+                <h3>₹{{ budget_amount }}</h3>
+            </div>
+
+            <div class="col-md-4">
+                <h6>Spent</h6>
+                <h3>₹{{ total_expense }}</h3>
+            </div>
+
+            <div class="col-md-4">
+                <h6>Remaining</h6>
+                <h3>₹{{ remaining_budget }}</h3>
+            </div>
+
+        </div>
+
+        <div class="progress mt-4" style="height:25px;">
+            <div class="progress-bar bg-success" role="progressbar" style="width:{{ budget_used }}%;">
+                {{ budget_used|floatformat:1 }}%
+            </div>
+        </div>
+
+    </div>
+
     <!-- Quick Actions -->
 
     <div class="row mt-5">
 
-        <div class="col-md-4 mb-3">
+
+        <div class="col-lg-3 col-md-6 mb-3">
             <div class="card text-center p-4 h-100">
                 <h4>➕ Add Expense</h4>
                 <p>Record a new expense.</p>
@@ -69,7 +107,7 @@
             </div>
         </div>
 
-        <div class="col-md-4 mb-3">
+       <div class="col-lg-3 col-md-6 mb-3">
             <div class="card text-center p-4 h-100">
                 <h4>📂 Categories</h4>
                 <p>View expense categories.</p>
@@ -80,7 +118,7 @@
             </div>
         </div>
 
-        <div class="col-md-4 mb-3">
+        <div class="col-lg-3 col-md-6 mb-3">
             <div class="card text-center p-4 h-100">
                 <h4>💼 Income Sources</h4>
                 <p>Add or update your income sources.</p>
@@ -90,8 +128,19 @@
                 </a>
             </div>
         </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card text-center p-4 h-100">
+                <h4>💰 Budget</h4>
+                <p>Set or update your monthly budget.</p>
+
+                <a href="{% url 'set_budget' %}" class="btn btn-primary">
+                    Set Budget
+                </a>
+            </div>
+        </div>
 
     </div>
+
     <div class="card mt-5 p-4">
 
         <h4 class="text-center mb-4">
