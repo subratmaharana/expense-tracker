@@ -12,9 +12,17 @@ Expense History
 
         <h2>📜 Expense History</h2>
 
-        <a href="{% url 'add_expense' %}" class="btn btn-success">
-            ➕ Add Expense
-        </a>
+        <div>
+
+            <a href="{% url 'export_pdf' %}" class="btn btn-danger me-2">
+                📄 Download PDF
+            </a>
+
+            <a href="{% url 'add_expense' %}" class="btn btn-success">
+                ➕ Add Expense
+            </a>
+
+        </div>
 
     </div>
 
@@ -30,13 +38,8 @@ Expense History
 
                     <div class="col-md-8">
 
-                        <input
-                            type="text"
-                            name="search"
-                            class="form-control"
-                            placeholder="Search by title, category or description..."
-                            value="{{ search }}"
-                        >
+                        <input type="text" name="search" class="form-control"
+                            placeholder="Search by title, category or description..." value="{{ search }}">
 
                     </div>
 

@@ -13,4 +13,9 @@ urlpatterns = [
     path("income/", views.income_list, name="income_list"),
     path("income/add/", views.add_income, name="add_income"),
     path("set-budget/",views.set_budget,name="set_budget"),
+    path(
+    "export-pdf/",
+    views.export_pdf,
+    name="export_pdf",
+    ),
 ]
