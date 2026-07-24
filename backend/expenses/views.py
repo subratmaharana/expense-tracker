@@ -44,6 +44,17 @@ def dashboard(request):
     if budget_used > 100:
         budget_used = 100
 
+    budget_status = "success"
+    budget_message = "You are within your budget."
+
+    if budget_used >= 70 and budget_used < 90:
+       budget_status = "warning"
+       budget_message = "Warning! You have used over 70% of your budget."
+
+    elif budget_used >= 90:
+        budget_status = "danger"
+        budget_message = "Alert! Your budget is almost exhausted."
+
     remaining_balance = total_income - total_expense
 
     total_transactions = Transaction.objects.filter(
@@ -134,6 +145,8 @@ def dashboard(request):
         "budget_amount": budget_amount,
         "remaining_budget": remaining_budget,
         "budget_used": budget_used,
+        "budget_status": budget_status,
+        "budget_message": budget_message,
     }
 
     return render(request, "expenses/dashboard.html", context)

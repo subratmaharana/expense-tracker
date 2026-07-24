@@ -84,150 +84,172 @@
         </div>
 
         <div class="progress mt-4" style="height:25px;">
-            <div class="progress-bar bg-success" role="progressbar" style="width:{{ budget_used }}%;">
+            <div class="progress-bar bg-{{ budget_status }}" role="progressbar" style="width:{{ budget_used }}%;">
                 {{ budget_used|floatformat:1 }}%
             </div>
         </div>
 
-    </div>
+        <div class="alert alert-{{ budget_status }} mt-3 mb-0">
+            {{ budget_message }}
+        </div>
 
-    <!-- Quick Actions -->
+        <!-- Quick Actions -->
 
-    <div class="row mt-5">
+        <div class="row mt-5">
 
 
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card text-center p-4 h-100">
-                <h4>➕ Add Expense</h4>
-                <p>Record a new expense.</p>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card text-center p-4 h-100">
+                    <h4>➕ Add Expense</h4>
+                    <p>Record a new expense.</p>
 
-                <a href="{% url 'add_expense' %}" class="btn btn-primary">
-                    Add Expense
-                </a>
+                    <a href="{% url 'add_expense' %}" class="btn btn-primary">
+                        Add Expense
+                    </a>
+                </div>
             </div>
-        </div>
 
-       <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card text-center p-4 h-100">
-                <h4>📂 Categories</h4>
-                <p>View expense categories.</p>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card text-center p-4 h-100">
+                    <h4>📂 Categories</h4>
+                    <p>View expense categories.</p>
 
-                <a href="{% url 'view_category' %}" class="btn btn-primary">
-                    View Categories
-                </a>
+                    <a href="{% url 'view_category' %}" class="btn btn-primary">
+                        View Categories
+                    </a>
+                </div>
             </div>
-        </div>
 
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card text-center p-4 h-100">
-                <h4>💼 Income Sources</h4>
-                <p>Add or update your income sources.</p>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card text-center p-4 h-100">
+                    <h4>💼 Income Sources</h4>
+                    <p>Add or update your income sources.</p>
 
-                <a href="{% url 'income_list' %}" class="btn btn-success">
-                    Manage Income
-                </a>
+                    <a href="{% url 'income_list' %}" class="btn btn-success">
+                        Manage Income
+                    </a>
+                </div>
             </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card text-center p-4 h-100">
-                <h4>💰 Budget</h4>
-                <p>Set or update your monthly budget.</p>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card text-center p-4 h-100">
+                    <h4>💰 Budget</h4>
+                    <p>Set or update your monthly budget.</p>
 
-                <a href="{% url 'set_budget' %}" class="btn btn-primary">
-                    Set Budget
-                </a>
+                    <a href="{% url 'set_budget' %}" class="btn btn-primary">
+                        Set Budget
+                    </a>
+                </div>
             </div>
-        </div>
-
-    </div>
-
-    <div class="card mt-5 p-4">
-
-        <h4 class="text-center mb-4">
-            📈 Income vs Expense
-        </h4>
-
-        <div style="height:350px;">
-
-            <canvas id="incomeExpenseChart"></canvas>
 
         </div>
 
-    </div>
+        <div class="card mt-5 p-4">
 
-    <!-- Recent Transactions -->
+            <h4 class="text-center mb-4">
+                📈 Income vs Expense
+            </h4>
 
-    <div class="card mt-5 p-4">
+            <div style="height:350px;">
 
-        <h4 class="mb-4">📝 Recent Transactions</h4>
+                <canvas id="incomeExpenseChart"></canvas>
 
-        <div class="table-responsive">
-
-            <table class="table table-dark table-hover align-middle">
-
-                <thead>
-
-                    <tr>
-                        <th>Title</th>
-                        <th>Category</th>
-                        <th>Paid From</th>
-                        <th>Amount</th>
-                        <th>Date</th>
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    {% for transaction in recent_transactions %}
-
-                    <tr>
-
-                        <td>{{ transaction.title }}</td>
-                        <td>{{ transaction.category.name }}</td>
-                        <td>{{ transaction.paid_from.source }}</td>
-                        <td>₹{{ transaction.amount }}</td>
-                        <td>{{ transaction.date }}</td>
-
-                    </tr>
-
-                    {% empty %}
-
-                    <tr>
-
-                        <td colspan="5" class="text-center">
-                            No Transactions Found
-                        </td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
+            </div>
 
         </div>
 
-    </div>
+        <!-- Recent Transactions -->
 
-    <!-- Pie Chart -->
+        <div class="card mt-5 p-4">
 
-    <!-- Charts -->
+            <h4 class="mb-4">📝 Recent Transactions</h4>
 
-    <div class="row mt-5">
+            <div class="table-responsive">
 
-        <div class="col-lg-6 mb-4">
+                <table class="table table-dark table-hover align-middle">
 
-            <div class="card p-4 h-100">
+                    <thead>
 
-                <h4 class="text-center mb-4">
-                    📊 Expense by Category
-                </h4>
+                        <tr>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Paid From</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
 
-                <div style="width:350px;height:350px;margin:auto;">
+                    </thead>
 
-                    <canvas id="expensePieChart"></canvas>
+                    <tbody>
+
+                        {% for transaction in recent_transactions %}
+
+                        <tr>
+
+                            <td>{{ transaction.title }}</td>
+                            <td>{{ transaction.category.name }}</td>
+                            <td>{{ transaction.paid_from.source }}</td>
+                            <td>₹{{ transaction.amount }}</td>
+                            <td>{{ transaction.date }}</td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="5" class="text-center">
+                                No Transactions Found
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- Pie Chart -->
+
+        <!-- Charts -->
+
+        <div class="row mt-5">
+
+            <div class="col-lg-6 mb-4">
+
+                <div class="card p-4 h-100">
+
+                    <h4 class="text-center mb-4">
+                        📊 Expense by Category
+                    </h4>
+
+                    <div style="width:350px;height:350px;margin:auto;">
+
+                        <canvas id="expensePieChart"></canvas>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-6 mb-4">
+
+                <div class="card p-4 h-100">
+
+                    <h4 class="text-center mb-4">
+                        📅 Monthly Expenses
+                    </h4>
+
+                    <div style="height:350px;">
+
+                        <canvas id="expenseBarChart"></canvas>
+
+                    </div>
 
                 </div>
 
@@ -235,131 +257,113 @@
 
         </div>
 
-        <div class="col-lg-6 mb-4">
+        {% endblock %}
 
-            <div class="card p-4 h-100">
+        {% block scripts %}
 
-                <h4 class="text-center mb-4">
-                    📅 Monthly Expenses
-                </h4>
-
-                <div style="height:350px;">
-
-                    <canvas id="expenseBarChart"></canvas>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    {% endblock %}
-
-    {% block scripts %}
-
-    {{ chart_labels|json_script:"chart-labels" }}
-    {{ chart_data|json_script:"chart-data" }}
-    {{ bar_labels|json_script:"bar-labels" }}
-    {{ bar_data|json_script:"bar-data" }}
-    {{ line_labels|json_script:"line-labels" }}
-    {{ income_data|json_script:"income-data" }}
-    {{ expense_data|json_script:"expense-data" }}
+        {{ chart_labels|json_script:"chart-labels" }}
+        {{ chart_data|json_script:"chart-data" }}
+        {{ bar_labels|json_script:"bar-labels" }}
+        {{ bar_data|json_script:"bar-data" }}
+        {{ line_labels|json_script:"line-labels" }}
+        {{ income_data|json_script:"income-data" }}
+        {{ expense_data|json_script:"expense-data" }}
 
 
-    <script>
+        <script>
 
-        const labels = JSON.parse(
-            document.getElementById("chart-labels").textContent
-        );
+            const labels = JSON.parse(
+                document.getElementById("chart-labels").textContent
+            );
 
-        const data = JSON.parse(
-            document.getElementById("chart-data").textContent
-        );
+            const data = JSON.parse(
+                document.getElementById("chart-data").textContent
+            );
 
-        const colors = [
-            "#FF6384",
-            "#36A2EB",
-            "#FFCE56",
-            "#4BC0C0",
-            "#9966FF",
-            "#FF9F40",
-            "#8BC34A",
-            "#E91E63",
-            "#3F51B5",
-            "#00BCD4",
-            "#795548",
-            "#9C27B0"
-        ];
+            const colors = [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56",
+                "#4BC0C0",
+                "#9966FF",
+                "#FF9F40",
+                "#8BC34A",
+                "#E91E63",
+                "#3F51B5",
+                "#00BCD4",
+                "#795548",
+                "#9C27B0"
+            ];
 
-        const ctx = document.getElementById("expensePieChart");
+            const ctx = document.getElementById("expensePieChart");
 
-        new Chart(ctx, {
+            new Chart(ctx, {
 
-            type: "doughnut",
+                type: "doughnut",
 
-            data: {
+                data: {
 
-                labels: labels,
+                    labels: labels,
 
-                datasets: [{
+                    datasets: [{
 
-                    label: "Expenses",
+                        label: "Expenses",
 
-                    data: data,
+                        data: data,
 
-                    backgroundColor: colors,
+                        backgroundColor: colors,
 
-                    borderColor: "#ffffff",
+                        borderColor: "#ffffff",
 
-                    borderWidth: 2,
+                        borderWidth: 2,
 
-                    hoverOffset: 18
+                        hoverOffset: 18
 
-                }]
+                    }]
 
-            },
+                },
 
-            options: {
+                options: {
 
-                responsive: true,
+                    responsive: true,
 
-                maintainAspectRatio: false,
+                    maintainAspectRatio: false,
 
-                cutout: "60%",
+                    cutout: "60%",
 
-                plugins: {
+                    plugins: {
 
-                    title: {
+                        title: {
 
-                        display: true,
+                            display: true,
 
-                        text: "Expense Distribution by Category",
-
-                        color: "#ffffff",
-
-                        font: {
-
-                            size: 20
-
-                        }
-
-                    },
-
-                    legend: {
-
-                        position: "bottom",
-
-                        labels: {
+                            text: "Expense Distribution by Category",
 
                             color: "#ffffff",
 
-                            padding: 20,
-
                             font: {
 
-                                size: 14
+                                size: 20
+
+                            }
+
+                        },
+
+                        legend: {
+
+                            position: "bottom",
+
+                            labels: {
+
+                                color: "#ffffff",
+
+                                padding: 20,
+
+                                font: {
+
+                                    size: 14
+
+                                }
 
                             }
 
@@ -369,223 +373,221 @@
 
                 }
 
-            }
+            });
 
-        });
+            const barLabels = JSON.parse(
+                document.getElementById("bar-labels").textContent
+            );
 
-        const barLabels = JSON.parse(
-            document.getElementById("bar-labels").textContent
-        );
+            const barData = JSON.parse(
+                document.getElementById("bar-data").textContent
+            );
 
-        const barData = JSON.parse(
-            document.getElementById("bar-data").textContent
-        );
+            const barCtx = document.getElementById("expenseBarChart");
 
-        const barCtx = document.getElementById("expenseBarChart");
+            new Chart(barCtx, {
 
-        new Chart(barCtx, {
+                type: "bar",
 
-            type: "bar",
+                data: {
 
-            data: {
+                    labels: barLabels,
 
-                labels: barLabels,
+                    datasets: [{
 
-                datasets: [{
+                        label: "Monthly Expenses",
 
-                    label: "Monthly Expenses",
+                        data: barData,
 
-                    data: barData,
+                        backgroundColor: "#36A2EB",
 
-                    backgroundColor: "#36A2EB",
+                        borderColor: "#1E88E5",
 
-                    borderColor: "#1E88E5",
+                        borderWidth: 1,
 
-                    borderWidth: 1,
+                        borderRadius: 8,
 
-                    borderRadius: 8,
+                        categoryPercentage: 0.5,
 
-                    categoryPercentage: 0.5,
+                        barPercentage: 0.6
 
-                    barPercentage: 0.6
-
-                }]
-            },
-
-            options: {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                scales: {
-
-                    y: {
-
-                        beginAtZero: true,
-
-                        ticks: {
-                            color: "#ffffff"
-                        },
-
-                        grid: {
-                            color: "rgba(255,255,255,0.1)"
-                        }
-
-                    },
-
-                    x: {
-
-                        ticks: {
-                            color: "#ffffff"
-                        },
-
-                        grid: {
-                            display: false
-                        }
-
-                    }
-
+                    }]
                 },
 
-                plugins: {
+                options: {
 
-                    legend: {
-                        display: false
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            ticks: {
+                                color: "#ffffff"
+                            },
+
+                            grid: {
+                                color: "rgba(255,255,255,0.1)"
+                            }
+
+                        },
+
+                        x: {
+
+                            ticks: {
+                                color: "#ffffff"
+                            },
+
+                            grid: {
+                                display: false
+                            }
+
+                        }
+
                     },
 
-                    title: {
+                    plugins: {
 
-                        display: true,
+                        legend: {
+                            display: false
+                        },
 
-                        text: "Monthly Expense Overview",
+                        title: {
 
-                        color: "#ffffff",
+                            display: true,
 
-                        font: {
-                            size: 18
+                            text: "Monthly Expense Overview",
+
+                            color: "#ffffff",
+
+                            font: {
+                                size: 18
+                            }
+
                         }
 
                     }
 
                 }
 
-            }
+            });
 
-        });
+            const lineLabels = JSON.parse(
+                document.getElementById("line-labels").textContent
+            );
 
-        const lineLabels = JSON.parse(
-            document.getElementById("line-labels").textContent
-        );
+            const incomeData = JSON.parse(
+                document.getElementById("income-data").textContent
+            );
 
-        const incomeData = JSON.parse(
-            document.getElementById("income-data").textContent
-        );
+            const expenseData = JSON.parse(
+                document.getElementById("expense-data").textContent
+            );
 
-        const expenseData = JSON.parse(
-            document.getElementById("expense-data").textContent
-        );
+            const lineCtx = document.getElementById("incomeExpenseChart");
 
-        const lineCtx = document.getElementById("incomeExpenseChart");
+            new Chart(lineCtx, {
 
-        new Chart(lineCtx, {
+                type: "line",
 
-            type: "line",
+                data: {
 
-            data: {
+                    labels: lineLabels,
 
-                labels: lineLabels,
+                    datasets: [
 
-                datasets: [
+                        {
+                            label: "Income",
+                            data: incomeData,
+                            borderColor: "#4CAF50",
+                            backgroundColor: "#4CAF50",
+                            tension: 0.4,
+                            fill: false
+                        },
 
-                    {
-                        label: "Income",
-                        data: incomeData,
-                        borderColor: "#4CAF50",
-                        backgroundColor: "#4CAF50",
-                        tension: 0.4,
-                        fill: false
-                    },
-
-                    {
-                        label: "Expense",
-                        data: expenseData,
-                        borderColor: "#F44336",
-                        backgroundColor: "#F44336",
-                        tension: 0.4,
-                        fill: false
-                    }
-
-                ]
-
-            },
-
-            options: {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                plugins: {
-
-                    title: {
-
-                        display: true,
-
-                        text: "Monthly Income vs Expense",
-
-                        color: "#ffffff",
-
-                        font: {
-                            size: 18
+                        {
+                            label: "Expense",
+                            data: expenseData,
+                            borderColor: "#F44336",
+                            backgroundColor: "#F44336",
+                            tension: 0.4,
+                            fill: false
                         }
 
-                    },
-
-                    legend: {
-
-                        labels: {
-                            color: "#ffffff"
-                        }
-
-                    }
+                    ]
 
                 },
 
-                scales: {
+                options: {
 
-                    x: {
+                    responsive: true,
 
-                        ticks: {
-                            color: "#ffffff"
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        title: {
+
+                            display: true,
+
+                            text: "Monthly Income vs Expense",
+
+                            color: "#ffffff",
+
+                            font: {
+                                size: 18
+                            }
+
                         },
 
-                        grid: {
-                            display: false
+                        legend: {
+
+                            labels: {
+                                color: "#ffffff"
+                            }
+
                         }
 
                     },
 
-                    y: {
+                    scales: {
 
-                        beginAtZero: true,
+                        x: {
 
-                        ticks: {
-                            color: "#ffffff"
+                            ticks: {
+                                color: "#ffffff"
+                            },
+
+                            grid: {
+                                display: false
+                            }
+
                         },
 
-                        grid: {
-                            color: "rgba(255,255,255,0.1)"
+                        y: {
+
+                            beginAtZero: true,
+
+                            ticks: {
+                                color: "#ffffff"
+                            },
+
+                            grid: {
+                                color: "rgba(255,255,255,0.1)"
+                            }
+
                         }
 
                     }
 
                 }
 
-            }
+            });
 
-        });
+        </script>
 
-    </script>
-
-    {% endblock %}
+        {% endblock %}
