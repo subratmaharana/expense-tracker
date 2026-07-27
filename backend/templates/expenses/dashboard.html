@@ -12,6 +12,64 @@
         Track your income, expenses and savings from one place.
     </p>
 
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+
+            <form method="GET">
+
+                <div class="row align-items-end">
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-bold">
+                            📅 Filter Dashboard
+                        </label>
+
+                        <select name="filter" class="form-select">
+
+                            <option value="all" {% if selected_filter == "all" %}selected{% endif %}>
+                                All Time
+                            </option>
+
+                            <option value="today" {% if selected_filter == "today" %}selected{% endif %}>
+                                Today
+                            </option>
+
+                            <option value="week" {% if selected_filter == "week" %}selected{% endif %}>
+                                This Week
+                            </option>
+
+                            <option value="month" {% if selected_filter == "month" %}selected{% endif %}>
+                                This Month
+                            </option>
+
+                            <option value="last_month" {% if selected_filter == "last_month" %}selected{% endif %}>
+                                Last Month
+                            </option>
+
+                            <option value="year" {% if selected_filter == "year" %}selected{% endif %}>
+                                This Year
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            Apply
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
     <!-- Summary Cards -->
 
     <div class="row mt-4 g-4">

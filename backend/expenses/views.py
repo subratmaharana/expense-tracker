@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+from django.utils import timezone
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
@@ -29,14 +30,107 @@ def home(request):
 @login_required
 def dashboard(request):
 
-    total_income = IncomeSource.objects.filter(
-        user=request.user
-    ).aggregate(total=Sum("amount"))["total"] or 0
+    # ----------------------------
+    # Dashboard Filter
+    # ----------------------------
 
-    total_expense = Transaction.objects.filter(
+    selected_filter = request.GET.get("filter", "all")
+
+    today = timezone.now().date()
+
+    expense_queryset = Transaction.objects.filter(
         user=request.user,
         transaction_type="Expense"
-    ).aggregate(total=Sum("amount"))["total"] or 0
+    )
+
+    income_queryset = IncomeSource.objects.filter(
+        user=request.user
+    )
+
+    if selected_filter == "today":
+
+        expense_queryset = expense_queryset.filter(
+            date=today
+        )
+
+        income_queryset = income_queryset.filter(
+            date=today
+        )
+
+    elif selected_filter == "week":
+
+        start_week = today - timedelta(days=today.weekday())
+
+        expense_queryset = expense_queryset.filter(
+            date__gte=start_week
+        )
+
+        income_queryset = income_queryset.filter(
+            date__gte=start_week
+        )
+
+    elif selected_filter == "month":
+
+        expense_queryset = expense_queryset.filter(
+            date__month=today.month,
+            date__year=today.year
+        )
+
+        income_queryset = income_queryset.filter(
+            date__month=today.month,
+            date__year=today.year
+        )
+
+    elif selected_filter == "last_month":
+
+        if today.month == 1:
+            month = 12
+            year = today.year - 1
+        else:
+            month = today.month - 1
+            year = today.year
+
+        expense_queryset = expense_queryset.filter(
+            date__month=month,
+            date__year=year
+        )
+
+        income_queryset = income_queryset.filter(
+            date__month=month,
+            date__year=year
+        )
+
+    elif selected_filter == "year":
+
+        expense_queryset = expense_queryset.filter(
+            date__year=today.year
+        )
+
+        income_queryset = income_queryset.filter(
+            date__year=today.year
+        )
+
+    # ----------------------------
+    # Summary Cards
+    # ----------------------------
+
+    total_income = income_queryset.aggregate(
+        total=Sum("amount")
+    )["total"] or 0
+
+    total_expense = expense_queryset.aggregate(
+        total=Sum("amount")
+    )["total"] or 0
+
+    remaining_balance = total_income - total_expense
+
+    total_transactions = expense_queryset.count()
+
+    recent_transactions = expense_queryset.order_by("-date")[:5]
+
+    # ----------------------------
+    # Budget
+    # ----------------------------
 
     current_month = datetime.now().month
     current_year = datetime.now().year
@@ -54,118 +148,177 @@ def dashboard(request):
     budget_used = 0
 
     if budget_amount > 0:
+
         budget_used = (total_expense / budget_amount) * 100
 
     if budget_used > 100:
+
         budget_used = 100
 
     budget_status = "success"
     budget_message = "You are within your budget."
 
     if budget_used >= 70 and budget_used < 90:
-       budget_status = "warning"
-       budget_message = "Warning! You have used over 70% of your budget."
+
+        budget_status = "warning"
+
+        budget_message = (
+            "Warning! You have used over 70% of your budget."
+        )
 
     elif budget_used >= 90:
+
         budget_status = "danger"
-        budget_message = "Alert! Your budget is almost exhausted."
 
-    remaining_balance = total_income - total_expense
+        budget_message = (
+            "Alert! Your budget is almost exhausted."
+        )
 
-    total_transactions = Transaction.objects.filter(
-        user=request.user
-    ).count()
-
-    recent_transactions = Transaction.objects.filter(
-        user=request.user
-    ).order_by("-date")[:5]
+    # ----------------------------
+    # Pie Chart
+    # ----------------------------
 
     category_expenses = (
-        Transaction.objects.filter(
-            user=request.user,
-            transaction_type="Expense"
-        )
+        expense_queryset
         .values("category__name")
         .annotate(total=Sum("amount"))
     )
-
-    monthly_expenses=(
-    Transaction.objects.filter(
-        user=request.user,
-        transaction_type="Expense"
-    )
-    .annotate(month=TruncMonth("date"))
-    .values("month")
-    .annotate(total=Sum("amount"))
-    .order_by("month")
-    )
-    monthly_income=(
-    IncomeSource.objects.filter(
-        user=request.user
-    )
-    .annotate(month=TruncMonth("date"))
-    .values("month")
-    .annotate(total=Sum("amount"))
-    .order_by("month")
-)
-
-    line_labels=[]
-    income_data=[]
-    expense_data=[]
-
-    income_dict={}
-    expense_dict={}
-
-    for item in monthly_income:
-        income_dict[item["month"].strftime("%b")]=float(item["total"])
-
-    for item in monthly_expenses:   
-        expense_dict[item["month"].strftime("%b")]=float(item["total"])
-
-    months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
-
-    for month in months:
-        if month in income_dict or month in expense_dict:
-            line_labels.append(month)
-            income_data.append(income_dict.get(month,0))
-            expense_data.append(expense_dict.get(month,0))
-
-    bar_labels=[]
-    bar_data=[]
-
-    for item in monthly_expenses:
-        bar_labels.append(item["month"].strftime("%b"))
-        bar_data.append(float(item["total"]))
 
     chart_labels = []
     chart_data = []
 
     for item in category_expenses:
+
         chart_labels.append(item["category__name"])
+
         chart_data.append(float(item["total"]))
 
+    # ----------------------------
+    # Continue in Part 2
+    # ----------------------------
+    # ----------------------------
+    # Monthly Expense Bar Chart
+    # ----------------------------
+
+    monthly_expenses = (
+        expense_queryset
+        .annotate(month=TruncMonth("date"))
+        .values("month")
+        .annotate(total=Sum("amount"))
+        .order_by("month")
+    )
+
+    bar_labels = []
+    bar_data = []
+
+    for item in monthly_expenses:
+        bar_labels.append(item["month"].strftime("%b"))
+        bar_data.append(float(item["total"]))
+
+    # ----------------------------
+    # Income vs Expense Line Chart
+    # ----------------------------
+
+    monthly_income = (
+        income_queryset
+        .annotate(month=TruncMonth("date"))
+        .values("month")
+        .annotate(total=Sum("amount"))
+        .order_by("month")
+    )
+
+    income_dict = {}
+    expense_dict = {}
+
+    for item in monthly_income:
+        income_dict[item["month"].strftime("%b")] = float(item["total"])
+
+    for item in monthly_expenses:
+        expense_dict[item["month"].strftime("%b")] = float(item["total"])
+
+    months = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ]
+
+    line_labels = []
+    income_data = []
+    expense_data = []
+
+    for month in months:
+        if month in income_dict or month in expense_dict:
+            line_labels.append(month)
+            income_data.append(income_dict.get(month, 0))
+            expense_data.append(expense_dict.get(month, 0))
+
+    # ----------------------------
+    # Spending Analytics
+    # ----------------------------
+
+    top_category = (
+        expense_queryset
+        .values("category__name")
+        .annotate(total=Sum("amount"))
+        .order_by("-total")
+        .first()
+    )
+
+    highest_expense = (
+        expense_queryset
+        .order_by("-amount")
+        .first()
+    )
+
+    average_daily_spending = 0
+
+    if total_expense > 0:
+        average_daily_spending = round(total_expense / 30, 2)
+
+    monthly_transactions = expense_queryset.filter(
+        date__month=datetime.now().month,
+        date__year=datetime.now().year
+    ).count()
+
+    # ----------------------------
+    # Context
+    # ----------------------------
+
     context = {
+        "selected_filter": selected_filter,
+
         "total_income": total_income,
         "total_expense": total_expense,
         "remaining_balance": remaining_balance,
         "total_transactions": total_transactions,
         "recent_transactions": recent_transactions,
+
         "chart_labels": chart_labels,
         "chart_data": chart_data,
-        "bar_labels":bar_labels,
-        "bar_data":bar_data,
-        "line_labels":line_labels,
-        "income_data":income_data,
-        "expense_data":expense_data,
+
+        "bar_labels": bar_labels,
+        "bar_data": bar_data,
+
+        "line_labels": line_labels,
+        "income_data": income_data,
+        "expense_data": expense_data,
+
         "budget_amount": budget_amount,
         "remaining_budget": remaining_budget,
         "budget_used": budget_used,
         "budget_status": budget_status,
         "budget_message": budget_message,
+
+        "top_category": top_category,
+        "highest_expense": highest_expense,
+        "average_daily_spending": average_daily_spending,
+        "monthly_transactions": monthly_transactions,
     }
 
-    return render(request, "expenses/dashboard.html", context)
-
+    return render(
+        request,
+        "expenses/dashboard.html",
+        context,
+    )
 
 @login_required
 def view_category(request):
