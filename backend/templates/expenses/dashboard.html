@@ -271,6 +271,88 @@
 
         </div>
 
+        <!-- Spending Analytics -->
+        <div class="row mt-4">
+
+            <!-- Top Category -->
+            <div class="col-md-3 mb-3">
+                <div class="card shadow border-0 h-100">
+                    <div class="card-body text-center">
+                        <h5>🏆 Top Category</h5>
+
+                    
+                        {% if top_category %}
+                        <h4 class="text-primary">
+                            {{ top_category.category__name }}
+                        </h4>
+
+                        <p class="text-muted">
+                            ₹{{ top_category.total }}
+                        </p>
+                        {% else %}
+                        <p class="text-muted">No Data</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Highest Expense -->
+            <div class="col-md-3 mb-3">
+                <div class="card shadow border-0 h-100">
+                    <div class="card-body text-center">
+                        <h5>💸 Highest Expense</h5>
+
+                        {% if highest_expense %}
+                        <h4 class="text-danger">
+                            {{ highest_expense.title }}
+                        </h4>
+
+                        <p class="text-muted">
+                            ₹{{ highest_expense.amount }}
+                        </p>
+                        {% else %}
+                        <p class="text-muted">No Data</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Average Daily Spending -->
+            <div class="col-md-3 mb-3">
+                <div class="card shadow border-0 h-100">
+                    <div class="card-body text-center">
+                        <h5>📈 Avg Daily Spending</h5>
+
+                        <h4 class="text-warning">
+                            ₹{{ average_daily_spending }}
+                        </h4>
+
+                        <p class="text-muted">
+                            Per Day
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monthly Transactions -->
+            <div class="col-md-3 mb-3">
+                <div class="card shadow border-0 h-100">
+                    <div class="card-body text-center">
+                        <h5>📅 Monthly Transactions</h5>
+
+                        <h4 class="text-success">
+                            {{ monthly_transactions }}
+                        </h4>
+
+                        <p class="text-muted">
+                            This Month
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
         <!-- Pie Chart -->
 
         <!-- Charts -->

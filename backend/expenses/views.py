@@ -56,7 +56,7 @@ def dashboard(request):
         income_queryset = income_queryset.filter(
             date=today
         )
-
+    
     elif selected_filter == "week":
 
         start_week = today - timedelta(days=today.weekday())
