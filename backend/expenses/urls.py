@@ -23,5 +23,5 @@ urlpatterns = [
     views.export_excel,
     name="export_excel",
     ),
-    
+    path("reports/", views.reports, name="reports"),
 ]

@@ -319,6 +319,78 @@ def dashboard(request):
         "expenses/dashboard.html",
         context,
     )
+@login_required
+def reports(request):
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+
+    total_income = IncomeSource.objects.filter(
+        user=request.user,
+        date__month=current_month,
+        date__year=current_year
+    ).aggregate(total=Sum("amount"))["total"] or 0
+
+    total_expense = Transaction.objects.filter(
+        user=request.user,
+        transaction_type="Expense",
+        date__month=current_month,
+        date__year=current_year
+
+    ).aggregate(total=Sum("amount"))["total"] or 0
+
+    remaining_balance = total_income - total_expense
+
+    budget = Budget.objects.filter(
+        user=request.user,
+        month=datetime.now().month,
+        year=datetime.now().year
+    ).first()
+
+    budget_amount = budget.amount if budget else 0
+
+    budget_used = 0
+
+    if budget_amount > 0:
+        budget_used = round((total_expense / budget_amount) * 100, 2)
+
+    top_category = (
+        Transaction.objects.filter(
+            user=request.user,
+            transaction_type="Expense" ,
+            date__month=current_month,
+            date__year=current_year
+        )
+        .values("category__name")
+        .annotate(total=Sum("amount"))
+        .order_by("-total")
+        .first()
+    )
+
+    recent_transactions = (
+        Transaction.objects.filter(
+            user=request.user,
+            date__month=current_month,
+            date__year=current_year
+        )
+        .order_by("-date")[:10]
+    )
+
+    context = {
+        "total_income": total_income,
+        "total_expense": total_expense,
+        "remaining_balance": remaining_balance,
+        "budget_amount": budget_amount,
+        "budget_used": budget_used,
+        "top_category": top_category,
+        "recent_transactions": recent_transactions,
+    }
+
+    return render(
+        request,
+        "expenses/reports.html",
+        context,
+    )
+
 
 @login_required
 def view_category(request):
