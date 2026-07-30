@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-4">👤 My Profile</h2>
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="card shadow border-0">
+                <div class="card-body text-center">
+
+                    {% if user.profile.image %}
+                    <img src="{{ user.profile.image.url }}" class="rounded-circle shadow mb-3" width="150" height="150"
+                        style="object-fit: cover;">
+                    {% else %}
+                    <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=0D6EFD&color=fff&size=200"
+                        class="rounded-circle shadow mb-3" width="150" height="150">
+                    {% endif %}
+
+                    {% if user.first_name or user.last_name %}
+                    <h3 class="text-white">
+                        {{ user.first_name }} {{ user.last_name }}
+                    </h3>
+
+                    <p class="text-secondary">
+                        @{{ user.username }}
+                    </p>
+                    {% else %}
+                    <h3 class="text-white">
+                        {{ user.username }}
+                    </h3>
+                    {% endif %}
+
+                    <p class="text-light">
+                        {{ user.email }}
+                    </p>
+
+                    <hr>
+
+                    <p>
+                        <strong>Joined:</strong><br>
+                        {{ user.date_joined|date:"d M Y" }}
+                    </p>
+
+                    <a href="{% url 'edit_profile' %}" class="btn btn-warning w-100 mb-2">
+                        ✏ Edit Profile
+                    </a>
+
+                    <a href="{% url 'password_change' %}" class="btn btn-primary w-100">
+                        🔒 Change Password
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+                    <div class="card shadow border-0 text-center">
+                        <div class="card-body">
+                            <h5>Total Income</h5>
+                            <h2 class="text-success">₹{{ total_income }}</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card shadow border-0 text-center">
+                        <div class="card-body">
+                            <h5>Total Expense</h5>
+                            <h2 class="text-danger">₹{{ total_expense }}</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card shadow border-0 text-center">
+                        <div class="card-body">
+                            <h5>Total Transactions</h5>
+                            <h2 class="text-primary">{{ total_transactions }}</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card shadow border-0 text-center">
+                        <div class="card-body">
+                            <h5>Remaining Balance</h5>
+                            <h2 class="text-warning">₹{{ remaining_balance }}</h2>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

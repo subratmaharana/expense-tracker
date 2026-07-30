@@ -1,5 +1,5 @@
 from django import forms
-from .models import IncomeSource ,Budget
+from .models import IncomeSource ,Budget ,User
 
 class IncomeSourceForm(forms.ModelForm):
 
@@ -15,3 +15,4 @@ class BudgetForm(forms.ModelForm):
     class Meta:
         model=Budget
         fields=["amount"]
+

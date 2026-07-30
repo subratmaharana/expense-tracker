@@ -22,6 +22,9 @@ from .models import Category , Transaction ,IncomeSource
 
 from datetime import datetime
 from .models import Budget
+from accounts.forms import EditProfileForm
+from accounts.models import Profile
+from django.contrib import messages
 
 
 def home(request):
@@ -391,6 +394,85 @@ def reports(request):
         context,
     )
 
+@login_required
+def profile(request):
+
+    total_income = IncomeSource.objects.filter(
+        user=request.user
+    ).aggregate(total=Sum("amount"))["total"] or 0
+
+    total_expense = Transaction.objects.filter(
+        user=request.user,
+        transaction_type="Expense"
+    ).aggregate(total=Sum("amount"))["total"] or 0
+
+    total_transactions = Transaction.objects.filter(
+        user=request.user
+    ).count()
+
+    remaining_balance = total_income - total_expense
+
+    context = {
+        "total_income": total_income,
+        "total_expense": total_expense,
+        "total_transactions": total_transactions,
+        "remaining_balance": remaining_balance,
+    }
+
+    return render(
+        request,
+        "expenses/profile.html",
+        context,
+    )
+
+
+@login_required
+def edit_profile(request):
+
+    profile, created = Profile.objects.get_or_create(
+        user=request.user
+    )
+
+    if request.method == "POST":
+
+        form = EditProfileForm(
+            request.POST,
+            request.FILES,
+            instance=request.user
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            if request.FILES.get("image"):
+                profile.image = request.FILES["image"]
+                profile.save()
+
+            messages.success(
+                request,
+                "Profile updated successfully."
+            )
+
+            return redirect("profile")
+
+    else:
+
+        form = EditProfileForm(
+            instance=request.user
+        )
+
+    context = {
+        "form": form,
+        "profile": profile,
+    }
+
+    return render(
+        request,
+        "expenses/edit_profile.html",
+        context,
+    )
+
 
 @login_required
 def view_category(request):
@@ -426,6 +508,8 @@ def add_expense(request):
         "categories": categories,
         "income_sources": income_sources,
     })
+
+
 
 from django.db.models import Q
 

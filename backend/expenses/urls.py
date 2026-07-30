@@ -24,4 +24,9 @@ urlpatterns = [
     name="export_excel",
     ),
     path("reports/", views.reports, name="reports"),
+    path("profile/", views.profile, name="profile"),
+    path(
+    "profile/edit/",
+    views.edit_profile,
+    name="edit_profile" ),
 ]

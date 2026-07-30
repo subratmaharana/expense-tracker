@@ -35,10 +35,15 @@
                         Reports
                     </a>
                 </li>
-
+                
                 <li class="nav-item">
                     <span class="nav-link">👋 {{ user.username }}</span>
                 </li>
+                <li class="nav-item">
+    <a class="nav-link" href="{% url 'profile' %}">
+        👤 Profile
+    </a>
+</li>
 
                 <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
                     <a class="btn btn-danger px-4" href="{% url 'logout' %}">
