@@ -35,20 +35,59 @@
                         Reports
                     </a>
                 </li>
-                
-                <li class="nav-item">
-                    <span class="nav-link">👋 {{ user.username }}</span>
-                </li>
-                <li class="nav-item">
-    <a class="nav-link" href="{% url 'profile' %}">
-        👤 Profile
-    </a>
-</li>
 
-                <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
-                    <a class="btn btn-danger px-4" href="{% url 'logout' %}">
-                        Logout
+               
+                
+
+                <li class="nav-item dropdown">
+
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown"
+                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+                        {% if user.profile.image %}
+                        <img src="{{ user.profile.image.url }}" class="rounded-circle me-2" width="40" height="40"
+                            style="object-fit: cover;">
+                        {% else %}
+                        <img src="https://ui-avatars.com/api/?name={{ user.username }}" class="rounded-circle me-2"
+                            width="40" height="40">
+                        {% endif %}
+
+                        <span>{{ user.username }}</span>
+
                     </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end">
+
+                        <li>
+                            <a class="dropdown-item" href="{% url 'profile' %}">
+                                👤 My Profile
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="{% url 'edit_profile' %}">
+                                ✏ Edit Profile
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="{% url 'reports' %}">
+                                📑 Reports
+                            </a>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                                🚪 Logout
+                            </a>
+                        </li>
+
+                    </ul>
+
                 </li>
 
                 {% else %}
