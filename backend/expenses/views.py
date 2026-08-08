@@ -605,7 +605,9 @@ def delete_expense(request, id):
 @login_required
 def income_list(request):
 
-    incomes = IncomeSource.objects.filter(user=request.user)
+    incomes = IncomeSource.objects.filter(
+        user=request.user
+    ).order_by("-date")
 
     total_income = sum(income.amount for income in incomes)
     
