@@ -155,13 +155,13 @@ def dashboard(request):
         total=Sum("amount")
     )["total"] or 0
 
-    remaining_budget = budget_amount - total_expense
+    remaining_budget = budget_amount - current_month_expense
 
     budget_used = 0
 
     if budget_amount > 0:
 
-        budget_used = (total_expense / budget_amount) * 100
+        budget_used = (current_month_expense / budget_amount) * 100
 
     if budget_used > 100:
 
