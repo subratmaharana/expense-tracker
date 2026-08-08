@@ -146,6 +146,15 @@ def dashboard(request):
 
     budget_amount = budget.amount if budget else 0
 
+    current_month_expense = Transaction.objects.filter(
+        user=request.user,
+        transaction_type="Expense",
+        date__month=current_month,
+        date__year=current_year
+    ).aggregate(
+        total=Sum("amount")
+    )["total"] or 0
+
     remaining_budget = budget_amount - total_expense
 
     budget_used = 0
@@ -306,6 +315,7 @@ def dashboard(request):
         "expense_data": expense_data,
 
         "budget_amount": budget_amount,
+        "current_month_expense": current_month_expense,
         "remaining_budget": remaining_budget,
         "budget_used": budget_used,
         "budget_status": budget_status,
@@ -501,7 +511,7 @@ def add_expense(request):
             date=request.POST.get("date"),
             description=request.POST.get("description"),
         )
-
+        messages.success(request, "Expense added successfully.")
         return redirect("expense_history")
 
     return render(request, "expenses/add_expense.html", {
@@ -566,7 +576,7 @@ def edit_expense(request, id):
         expense.description = request.POST.get("description")
 
         expense.save()
-
+        messages.success(request, "Expense updated successfully.")
         return redirect("expense_history")
 
     return render(request, "expenses/edit_expense.html", {
@@ -583,7 +593,11 @@ def delete_expense(request, id):
         user=request.user
     )
 
-    expense.delete()
+    expense.delete() 
+    messages.success(
+        request,
+        "Expense deleted successfully."
+    )
 
     return redirect("expense_history")
 
@@ -594,7 +608,7 @@ def income_list(request):
     incomes = IncomeSource.objects.filter(user=request.user)
 
     total_income = sum(income.amount for income in incomes)
-
+    
     return render(request, "expenses/income_list.html", {
         "incomes": incomes,
         "total_income": total_income,
@@ -612,7 +626,7 @@ def add_income(request):
             income = form.save(commit=False)
             income.user = request.user
             income.save()
-
+            messages.success(request, "Income added successfully.")
             return redirect("income_list")
 
     else:
@@ -626,34 +640,55 @@ def add_income(request):
 @login_required
 def set_budget(request):
 
-    month=datetime.now().month
-    year=datetime.now().year
-    budget,created=Budget.objects.get_or_create(
-        user=request.user,
-        month=month,
-        year=year,
+    current_month = datetime.now().month
+    current_year = datetime.now().year
 
+    budget, created = Budget.objects.get_or_create(
+        user=request.user,
         defaults={
-            "amount":0
+            "month": current_month,
+            "year": current_year,
+            "amount": 0,
         }
     )
-    if request.method=="POST":
 
-        form=BudgetForm(request.POST,instance=budget)
+    if request.method == "POST":
+
+        form = BudgetForm(
+            request.POST,
+            instance=budget
+        )
 
         if form.is_valid():
 
-            form.save()
+            budget = form.save(commit=False)
+
+            budget.user = request.user
+            budget.month = current_month
+            budget.year = current_year
+
+            budget.save()
+
+            messages.success(
+                request,
+                "Budget updated successfully."
+            )
 
             return redirect("dashboard")
 
     else:
-        form=BudgetForm(instance=budget)
-    return render(request,"expenses/set_budget.html",{
 
-        "form":form
+        form = BudgetForm(
+            instance=budget
+        )
 
-    })
+    return render(
+        request,
+        "expenses/set_budget.html",
+        {
+            "form": form,
+        }
+    )
 
 @login_required
 def export_pdf(request):
