@@ -36,8 +36,8 @@
                     </a>
                 </li>
 
-               
-                
+
+
 
                 <li class="nav-item dropdown">
 
@@ -92,19 +92,20 @@
 
                 {% else %}
 
-                <li class="nav-item me-2">
-                    <a class="btn btn-outline-light" href="{% url 'register' %}">
+                <li class="nav-item nav-auth-item">
+                    <a href="{% url 'register' %}" class="nav-auth-btn">
                         Register
                     </a>
                 </li>
 
-                <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
-                    <a class="btn btn-success px-4" href="{% url 'login' %}">
+                <li class="nav-item nav-auth-item">
+                    <a href="{% url 'login' %}" class="nav-auth-btn">
                         Login
                     </a>
                 </li>
 
                 {% endif %}
+
 
             </ul>
         </div>

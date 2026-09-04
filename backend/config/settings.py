@@ -80,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'expense_tracker',
         'USER' : 'root' ,
-        'PASSWORD' : 'Subrat@2005' ,
+        'PASSWORD' : 'password' ,
         'HOST' : 'localhost' ,
         'PORT' :  '3306',
     }
