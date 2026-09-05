@@ -26,6 +26,14 @@ from accounts.forms import EditProfileForm
 from accounts.models import Profile
 from django.contrib import messages
 
+import random
+from datetime import datetime, timedelta
+
+from django.core.mail import send_mail
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.contrib import messages
+
 
 def home(request):
     return render(request, "home.html")
@@ -944,3 +952,104 @@ def export_excel(request):
     workbook.save(response)
 
     return response
+
+def forgot_password(request):
+
+    if request.method == "POST":
+
+        email = request.POST.get("email")
+
+        try:
+            user = User.objects.get(email=email)
+
+            otp = str(random.randint(100000, 999999))
+
+            request.session["reset_user_id"] = user.id
+            request.session["reset_otp"] = otp
+            request.session["reset_otp_expiry"] = (
+                datetime.now() + timedelta(minutes=5)
+            ).isoformat()
+
+            send_mail(
+                "Expense Tracker Pro - Password Reset OTP",
+                f"Your OTP is: {otp}\n\nThis OTP is valid for 5 minutes.",
+                None,
+                [email],
+            )
+
+        except User.DoesNotExist:
+            pass
+
+        return redirect("verify_otp")
+
+    return render(request, "registration/forgot_password.html")
+
+
+def verify_otp(request):
+
+    if request.method == "POST":
+
+        entered_otp = request.POST.get("otp")
+
+        saved_otp = request.session.get("reset_otp")
+        expiry = request.session.get("reset_otp_expiry")
+
+        if not saved_otp or not expiry:
+            messages.error(request, "OTP session expired. Please request a new OTP.")
+            return redirect("forgot_password")
+
+        if datetime.now() > datetime.fromisoformat(expiry):
+            request.session.flush()
+            messages.error(request, "OTP has expired. Please request a new OTP.")
+            return redirect("forgot_password")
+
+        if entered_otp != saved_otp:
+            messages.error(request, "Invalid OTP.")
+            return redirect("verify_otp")
+
+        request.session["otp_verified"] = True
+
+        return redirect("reset_password")
+
+    return render(request, "registration/verify_otp.html")
+
+
+def reset_password(request):
+
+    if not request.session.get("otp_verified"):
+        return redirect("forgot_password")
+
+    if request.method == "POST":
+
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+            return redirect("reset_password")
+
+        if len(password) < 8:
+            messages.error(request, "Password must be at least 8 characters.")
+            return redirect("reset_password")
+
+        user_id = request.session.get("reset_user_id")
+
+        try:
+            user = User.objects.get(id=user_id)
+
+            user.set_password(password)
+            user.save()
+
+            request.session.flush()
+
+            messages.success(
+                request,
+                "Password changed successfully. Please login."
+            )
+
+            return redirect("login")
+
+        except User.DoesNotExist:
+            return redirect("forgot_password")
+
+    return render(request, "registration/reset_password.html")

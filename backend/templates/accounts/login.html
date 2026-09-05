@@ -14,11 +14,11 @@ Login
                 <h2 class="text-center mb-4">Login</h2>
 
                 {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-danger">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
+                {% for message in messages %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+                {% endfor %}
                 {% endif %}
 
                 <form method="POST">
@@ -26,20 +26,19 @@ Login
 
                     <div class="mb-3">
                         <label class="form-label">Username</label>
-                        <input type="text"
-                               name="username"
-                               class="form-control"
-                               placeholder="Enter username"
-                               required>
+                        <input type="text" name="username" class="form-control" placeholder="Enter username" required>
                     </div>
 
                     <div class="mb-4">
                         <label class="form-label">Password</label>
-                        <input type="password"
-                               name="password"
-                               class="form-control"
-                               placeholder="Enter password"
-                               required>
+                        <input type="password" name="password" class="form-control" placeholder="Enter password"
+                            required>
+                    </div>
+
+                    <div class="text-end mt-2">
+                        <a href="{% url 'forgot_password' %}" class="text-primary text-decoration-none">
+                            Forgot Password?
+                        </a>
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100">
