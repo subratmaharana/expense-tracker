@@ -82,7 +82,7 @@ Users can view their monthly financial reports and export transaction data in:
 ### 1. Clone the repository
 
 ```bash
-git clone YOUR_GITHUB_REPOSITORY_URL
+git clone https://github.com/subratmaharana/expense-tracker.git
 cd expense-tracker
 python -m venv env
 env\Scripts\activate
