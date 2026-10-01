@@ -5,7 +5,7 @@ It helps users manage expenses, income, budgets, transactions and financial repo
 
 ## 🚀 Live Demo
 
-👉 [Expense Tracker Pro](https://expense-tracker-jihs.onrender.com)
+👉 [Expense Tracker Pro](https://expense-tracker-ijhs.onrender.com/)
 
 ## ✨ Features
 
