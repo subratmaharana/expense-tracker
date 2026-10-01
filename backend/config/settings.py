@@ -21,6 +21,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 import os
+import dj_database_url
+
 
 SECRET_KEY = os.environ.get(
     "SECRET_KEY",
@@ -85,14 +87,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'expense_tracker',
-        'USER' : 'root' ,
-        'PASSWORD' : 'password' ,
-        'HOST' : 'localhost' ,
-        'PORT' :  '3306',
-    }
+    "default": dj_database_url.config(
+        default="mysql://root:password@localhost:3306/expense_tracker",
+        conn_max_age=600
+    )
 }
 
 
