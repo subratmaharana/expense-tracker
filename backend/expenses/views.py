@@ -8,6 +8,7 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.units import inch
+from django.shortcuts import get_object_or_404
 
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
@@ -1053,3 +1054,24 @@ def reset_password(request):
             return redirect("forgot_password")
 
     return render(request, "registration/reset_password.html")
+
+@login_required
+def delete_income(request, income_id):
+
+    income = get_object_or_404(
+        IncomeSource,
+        id=income_id,
+        user=request.user
+    )
+
+    if request.method == "POST":
+        income.delete()
+
+        messages.success(
+            request,
+            "Income deleted successfully."
+        )
+
+        return redirect("income_list")
+
+    return redirect("income_list")

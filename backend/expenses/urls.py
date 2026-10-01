@@ -35,4 +35,10 @@ urlpatterns = [
     path("verify-otp/", views.verify_otp, name="verify_otp"),
 
     path("reset-password/", views.reset_password, name="reset_password"),
+
+    path(
+    "income/delete/<int:income_id>/",
+    views.delete_income,
+    name="delete_income"
+),
 ]
